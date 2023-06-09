@@ -1,7 +1,8 @@
 .grid {
   display: grid;
-  grid-template-rows: 1fr 3px 1fr;
-  grid-template-columns: 1fr 3px 1fr;
+  grid-template-areas: "editor-html . editor-js" ". . ." "editor-css . editor-output";
+  grid-template-columns: 1fr 5px 1fr;
+  grid-template-rows: 1fr 5px 1fr;
 }
 
 .gutter-col {

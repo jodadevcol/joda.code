@@ -1,11 +1,22 @@
 import Split from 'split-grid'
 import { encode, decode } from 'js-base64'
+import * as monaco from 'monaco-editor'
+import HtmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker'
+import CssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker'
+import JsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
 
 import { onSelect } from './src/utils/dom'
 import './style.css'
 
+window.MonacoEnvironment = {
+  getWorker: (workerId, label) => {
+    if (label === 'html') return new HtmlWorker()
+    if (label === 'css') return new CssWorker()
+    if (label === 'javascript') return new JsWorker()
+  }
+}
+
 Split({
-  snapOffset: 10,
   columnGutters: [{
     track: 1,
     element: document.querySelector('.gutter-col-1')
@@ -21,10 +32,14 @@ const onCSS = onSelect('#codeCSS')
 const onHTML = onSelect('#codeHTML')
 const onOutput = onSelect('#outputHTML')
 
+const { pathname } = window.location
+const decodePathname = decode(pathname.slice(1))
+const [partHTML, partCSS, partJS] = decodePathname.split('|')
+
 const createOutput = () => {
-  const valueHTML = onHTML.value
-  const valueCSS = onCSS.value
-  const valueJS = onJS.value
+  const valueHTML = editorHTML.getValue()
+  const valueCSS = editorCSS.getValue()
+  const valueJS = editorJS.getValue()
 
   return `
     <!DOCTYPE html>
@@ -40,25 +55,10 @@ const createOutput = () => {
   `
 }
 
-const initOutput = () => {
-  const { pathname } = window.location
-  if (pathname === '/') return
-
-  const decodePathname = decode(pathname.slice(1))
-  const [partHTML, partCSS, partJS] = decodePathname.split('|')
-
-  onHTML.value = partHTML
-  onCSS.value = partCSS
-  onJS.value = partJS
-
-  const outputHTML = createOutput()
-  onOutput.setAttribute('srcdoc', outputHTML)
-}
-
 const updatedOutput = () => {
-  const valueHTML = onHTML.value
-  const valueCSS = onCSS.value
-  const valueJS = onJS.value
+  const valueHTML = editorHTML.getValue()
+  const valueCSS = editorCSS.getValue()
+  const valueJS = editorJS.getValue()
 
   const hashedCode = `${valueHTML}|${valueCSS}|${valueJS}`
   const encodeCode = encode(hashedCode)
@@ -68,8 +68,25 @@ const updatedOutput = () => {
   onOutput.setAttribute('srcdoc', outputHTML)
 }
 
-onJS.addEventListener('input', updatedOutput)
-onCSS.addEventListener('input', updatedOutput)
-onHTML.addEventListener('input', updatedOutput)
+const COMMON_EDITOR_OPTIONS = {
+  automaticLayout: true, fontSize: 16, theme: 'vs-dark'
+}
 
-initOutput()
+const editorHTML = monaco.editor.create(onHTML, {
+  ...COMMON_EDITOR_OPTIONS, value: partHTML, language: 'html'
+})
+
+const editorCSS = monaco.editor.create(onCSS, {
+  ...COMMON_EDITOR_OPTIONS, value: partCSS, language: 'css'
+})
+
+const editorJS = monaco.editor.create(onJS, {
+  ...COMMON_EDITOR_OPTIONS, value: partJS, language: 'javascript'
+})
+
+editorHTML.onDidChangeModelContent(updatedOutput)
+editorCSS.onDidChangeModelContent(updatedOutput)
+editorJS.onDidChangeModelContent(updatedOutput)
+
+const outputHTML = createOutput()
+onOutput.setAttribute('srcdoc', outputHTML)

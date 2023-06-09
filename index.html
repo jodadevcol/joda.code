@@ -17,34 +17,34 @@
     <main class="jd-main">
       <section class="jd-section">
         <div class="jd-areas grid">
-          <div class="jd-areas--content">
+          <div id="editor-html" class="jd-areas--content">
             <div class="jd-area jd-area--html">
-              <textarea class="jd-inputCode jd-inputCode--html" name="CodeHtml" id="codeHTML"
-                placeholder="codeHTML"></textarea>
+              <div id="codeHTML" class="jd-inputCode jd-inputCode--html" data-name="CodeHtml"
+                data-placeholder="codeHTML"></div>
             </div>
           </div>
 
           <div class="jd-areas--gutter gutter-col gutter-col-1"></div>
 
-          <div class="jd-areas--content">
+          <div id="editor-js" class="jd-areas--content">
             <div class="jd-area jd-area--javascript">
-              <textarea class="jd-inputCode jd-inputCode--javascript" name="CodeJavaScript" id="codeJS"
-                placeholder="codeJS"></textarea>
+              <div id="codeJS" class="jd-inputCode jd-inputCode--javascript" data-name="CodeJavaScript"
+                data-placeholder="codeJS"></div>
             </div>
           </div>
 
-          <div class="jd-areas--content">
+          <div id="editor-css" class="jd-areas--content">
             <div class="jd-area jd-area--css">
-              <textarea class="jd-inputCode jd-inputCode--css" name="CodeCss" id="codeCSS"
-                placeholder="codeCSS"></textarea>
+              <div id="codeCSS" class="jd-inputCode jd-inputCode--css" data-name="CodeCss" data-placeholder="codeCSS">
+              </div>
             </div>
           </div>
 
           <div class="jd-areas--gutter gutter-row gutter-row-1"></div>
 
-          <div class="jd-areas--content">
+          <div id="editor-output" class="jd-areas--content">
             <div class="jd-area jd-area--output">
-              <iframe class="js-outpudCode" id="outputHTML" src="data:text/html;base64"></iframe>
+              <iframe class="js-outputCode" id="outputHTML" src="data:text/html;base64"></iframe>
             </div>
           </div>
         </div>
