@@ -14,7 +14,8 @@
     "vite": "4.3.2"
   },
   "dependencies": {
-    "js-base64": "^3.7.5"
+    "js-base64": "3.7.5",
+    "monaco-editor": "0.38.0"
   },
   "eslintConfig": {
     "extends": [
